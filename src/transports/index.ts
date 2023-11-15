@@ -1,4 +1,5 @@
 import { type DailyRotateFileTransportOptions } from 'winston-daily-rotate-file'
+import { type SlackHookOptions } from 'winston-slack-webhook-transport'
 import { type ConsoleTransportOptions } from 'winston/lib/winston/transports'
 import { type TransportTypes } from '../transport-types'
 
@@ -12,4 +13,9 @@ interface FileTransport {
   options: DailyRotateFileTransportOptions
 }
 
-export type Transport = ConsoleTransport | FileTransport
+interface SlackTransport {
+  type: TransportTypes.SLACK
+  options: SlackHookOptions
+}
+
+export type Transport = ConsoleTransport | FileTransport | SlackTransport
