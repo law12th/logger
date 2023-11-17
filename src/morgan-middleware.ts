@@ -7,7 +7,7 @@ const messageFormat =
   ':method :url :status :res[content-length] - :response-time ms'
 
 const stream: StreamOptions = {
-  write: (message) => logger.http(message)
+  write: (message) => logger.http(message.trim())
 }
 
 export const morganMiddleware = morgan(messageFormat, { stream })
