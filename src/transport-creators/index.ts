@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import DailyRotateFile, {
   type DailyRotateFileTransportOptions
 } from 'winston-daily-rotate-file'
@@ -9,19 +10,36 @@ import {
   type ConsoleTransportInstance,
   type ConsoleTransportOptions
 } from 'winston/lib/winston/transports'
+import { TransportTypes } from '../transport-types'
+import { type Transport } from '../transports'
 
-export const createConsoleTransport = (
+const createConsoleTransport = (
   options: ConsoleTransportOptions
 ): ConsoleTransportInstance => {
   return new Console(options)
 }
 
-export const createFileTransport = (
+const createFileTransport = (
   options: DailyRotateFileTransportOptions
 ): DailyRotateFile => {
   return new DailyRotateFile(options)
 }
 
-export const createSlackTransport = (options: SlackHookOptions): SlackHook => {
+const createSlackTransport = (options: SlackHookOptions): SlackHook => {
   return new SlackHook(options)
+}
+
+export const createTransports = (
+  transports: Transport[]
+): Array<DailyRotateFile | ConsoleTransportInstance | SlackHook> => {
+  return transports.map(({ type, options }) => {
+    switch (type) {
+      case TransportTypes.CONSOLE:
+        return createConsoleTransport(options)
+      case TransportTypes.FILE:
+        return createFileTransport(options)
+      case TransportTypes.SLACK:
+        return createSlackTransport(options)
+    }
+  })
 }

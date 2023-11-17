@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import * as winston from 'winston'
-import { getLoggerTransports } from './logger-transports'
 import { type Transport } from './transports'
 import {
   Colours,
@@ -7,6 +7,10 @@ import {
   LoggingLevels,
   TIME_FORMAT
 } from './utils/constants'
+import { createTransports } from './transport-creators'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const colours = {
   error: Colours.RED,
@@ -34,10 +38,11 @@ const format = winston.format.combine(
   )
 )
 
-export const createLogger = (transportsConfig: Transport[]): winston.Logger => {
+export const createLogger = (transports: Transport[]): winston.Logger => {
   return winston.createLogger({
-    transports: getLoggerTransports(transportsConfig),
+    transports: createTransports(transports),
     levels,
+    level: process.env.LOG_LEVEL ?? 'http',
     format
   })
 }

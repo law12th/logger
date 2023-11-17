@@ -5,7 +5,7 @@ import { DATE_FORMAT } from '../utils/constants'
 
 dotenv.config()
 
-export const transportsConfig: Transport[] = [
+export const transports: Transport[] = [
   {
     type: TransportTypes.CONSOLE,
     options: {
@@ -28,13 +28,6 @@ export const transportsConfig: Transport[] = [
       dirname: './.logs',
       level: 'error',
       datePattern: DATE_FORMAT
-    }
-  },
-  {
-    type: TransportTypes.SLACK,
-    options: {
-      webhookUrl: process.env.SLACK_WEBHOOK_URL as string,
-      level: 'error'
     }
   }
 ]
