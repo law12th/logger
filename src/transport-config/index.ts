@@ -14,7 +14,8 @@ const transports: Transport[] = [
       dirname: './.logs',
       level: 'http',
       datePattern: DATE_FORMAT,
-      format: winston.format.json()
+      format: winston.format.json(),
+      maxFiles: '30d'
     }
   },
   {
@@ -24,7 +25,8 @@ const transports: Transport[] = [
       dirname: './.logs',
       level: 'error',
       datePattern: DATE_FORMAT,
-      format: winston.format.json()
+      format: winston.format.json(),
+      maxFiles: '30d'
     }
   }
 ]
