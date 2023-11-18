@@ -1,24 +1,20 @@
 import dotenv from 'dotenv'
+import * as winston from 'winston'
 import { TransportTypes } from '../transport-types'
 import { type Transport } from '../transports'
 import { DATE_FORMAT } from '../utils/constants'
 
 dotenv.config()
 
-export const transports: Transport[] = [
-  {
-    type: TransportTypes.CONSOLE,
-    options: {
-      level: 'info'
-    }
-  },
+const transports: Transport[] = [
   {
     type: TransportTypes.FILE,
     options: {
       filename: 'all-%DATE%.log',
       dirname: './.logs',
-      level: 'all',
-      datePattern: DATE_FORMAT
+      level: 'http',
+      datePattern: DATE_FORMAT,
+      format: winston.format.json()
     }
   },
   {
@@ -27,7 +23,21 @@ export const transports: Transport[] = [
       filename: 'error-%DATE%.log',
       dirname: './.logs',
       level: 'error',
-      datePattern: DATE_FORMAT
+      datePattern: DATE_FORMAT,
+      format: winston.format.json()
     }
   }
 ]
+
+const consoleTransportConfig: Transport = {
+  type: TransportTypes.CONSOLE,
+  options: {
+    level: 'debug'
+  }
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  transports.push(consoleTransportConfig)
+}
+
+export { transports }

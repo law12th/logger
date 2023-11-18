@@ -1,34 +1,20 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+import dotenv from 'dotenv'
 import * as winston from 'winston'
+import { createTransports } from './transport-creators'
 import { type Transport } from './transports'
 import {
-  Colours,
   DATE_FORMAT,
-  LoggingLevels,
-  TIME_FORMAT
+  TIME_FORMAT,
+  logLevels as levels,
+  logColours
 } from './utils/constants'
-import { createTransports } from './transport-creators'
-import dotenv from 'dotenv'
 
 dotenv.config()
 
-const colours = {
-  error: Colours.RED,
-  warn: Colours.YELLOW,
-  info: Colours.BLUE,
-  http: Colours.MAGENTA,
-  debug: Colours.WHITE
-}
+const level = process.env.NODE_ENV !== 'production' ? 'debug' : 'info'
 
-winston.addColors(colours)
-
-const levels = {
-  error: LoggingLevels.ERROR,
-  warn: LoggingLevels.WARN,
-  info: LoggingLevels.INFO,
-  http: LoggingLevels.HTTP,
-  debug: LoggingLevels.DEBUG
-}
+winston.addColors(logColours)
 
 const format = winston.format.combine(
   winston.format.timestamp({ format: `${DATE_FORMAT} ${TIME_FORMAT}` }),
@@ -42,7 +28,7 @@ export const createLogger = (transports: Transport[]): winston.Logger => {
   return winston.createLogger({
     transports: createTransports(transports),
     levels,
-    level: process.env.LOG_LEVEL ?? 'http',
+    level,
     format
   })
 }
